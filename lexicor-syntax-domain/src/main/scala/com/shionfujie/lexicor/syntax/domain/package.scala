@@ -4,4 +4,6 @@ package object domain {
 
   type SyntaxType = SyntaxType.Value
 
+  type Result = Either[Error, Cond]
+
 }
