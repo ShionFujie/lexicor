@@ -3,6 +3,7 @@ package com.shionfujie.lexicor.lexical.usecase
 import com.shionfujie.lexicor.core.domain._
 import com.shionfujie.lexicor.core.domain.Lexemes.{Keyword, Subject}
 
+import scala.util.matching.Regex
 import scala.util.parsing.combinator.Parsers
 
 /** Provides factory methods construct a parser that understands the language with the power of [[Parsers]]. */
@@ -37,6 +38,29 @@ private object lexicalParsers extends Parsers {
         "'" + s + "' expected but " + found + " found",
         in.drop(start - offset)
       )
+    }
+  }
+
+  /** A parser that matches a regex string and returns it to a [[String]] with a [[Pos]] */
+  implicit def regex(r: Regex): Parser[String With Pos] = in => {
+    val source = in.source
+    val offset = in.offset
+    val start = handleWhiteSpace(source, offset)
+    r.findPrefixMatchOf(new SubSequence(source, start)) match {
+      case Some(matched) =>
+        val end = start + matched.end
+        Success(
+          ((start, end - 1), source.subSequence(start, end).toString),
+          in.drop(end - offset)
+        )
+      case None =>
+        val found =
+          if (start == source.length()) "end of source"
+          else "'" + source.charAt(start) + "'"
+        Failure(
+          "string matching regex '" + r + "' expected but " + found + " found",
+          in.drop(start - offset)
+        )
     }
   }
 
