@@ -72,6 +72,11 @@ private object lexicalParsers extends Parsers {
   def subject(symbol: Symbol): Parser[Lexeme] =
     for ((pos, _) <- literal(symbol.name)) yield Subject(pos, symbol)
 
+  /** A parser that matches what `p` matches which is parenthesised, i.e., following `opening` and
+    * preceding `closing`, and returns the result of `p` with a [[Pos]]. */
+  def parens[T](opening: Elem, p: => Parser[T], closing: Elem): Parser[T With Pos] = opening ~ p ~ closing ^^ { case (start, _) ~ t ~ ((end, _)) => (start bridgeTo end, t) }
+
+
   /** Behaves as the same as [[Parsers.acceptIf]] except an [[Elem]] with a [[Pos]] being returned instead. */
   private def acceptIf2(p: Elem => Boolean)(err: Elem => String): Parser[Elem With Pos] = in =>
     if (in.atEnd) Failure("end of input", in)
