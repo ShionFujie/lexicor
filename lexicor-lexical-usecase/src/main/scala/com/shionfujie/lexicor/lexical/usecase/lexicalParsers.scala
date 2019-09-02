@@ -76,6 +76,7 @@ private object lexicalParsers extends Parsers {
     * preceding `closing`, and returns the result of `p` with a [[Pos]]. */
   def parens[T](opening: Elem, p: => Parser[T], closing: Elem): Parser[T With Pos] = opening ~ p ~ closing ^^ { case (start, _) ~ t ~ ((end, _)) => (start bridgeTo end, t) }
 
+  private[lexical] def unzip[T](p: => Parser[T With Pos]): Parser[T] = for ((_, t) <- p) yield t
 
   /** Behaves as the same as [[Parsers.acceptIf]] except an [[Elem]] with a [[Pos]] being returned instead. */
   private def acceptIf2(p: Elem => Boolean)(err: Elem => String): Parser[Elem With Pos] = in =>
