@@ -1,6 +1,7 @@
 package com.shionfujie.lexicor.lexical.usecase
 
 import com.shionfujie.lexicor.core.domain._
+import com.shionfujie.lexicor.core.domain.Lexemes.Keyword
 
 import scala.util.parsing.combinator.Parsers
 
@@ -38,6 +39,10 @@ private object lexicalParsers extends Parsers {
       )
     }
   }
+
+  /** A parser that matches a symbol's name and returns it to a [[Keyword]] */
+  def keyword(symbol: Symbol): Parser[Lexeme] =
+    for ((pos, _) <- literal(symbol.name)) yield Keyword(pos, symbol)
 
   /** Behaves as the same as [[Parsers.acceptIf]] except an [[Elem]] with a [[Pos]] being returned instead. */
   private def acceptIf2(p: Elem => Boolean)(err: Elem => String): Parser[Elem With Pos] = in =>
