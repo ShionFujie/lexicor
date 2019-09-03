@@ -31,4 +31,11 @@ class SyntaxParserTest extends FunSuite with Matchers {
     syntaxParser(lexemes) shouldBe expected
   }
 
+  test("empty input") {
+    val lexemes = List()
+    val expected = List()
+
+    syntaxParser(lexemes) shouldBe expected
+  }
+
 }
