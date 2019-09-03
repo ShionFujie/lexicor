@@ -1,6 +1,6 @@
 package com.shionfujie.lexicor.syntax.usecase.util
 
-private[syntax] case class Entry[K, V](key: K, value: V)
+private[util] case class Entry[K, V](key: K, value: V)
 
 private[syntax] case class Tree[K, V] private[util](subtrees: Set[(Entry[K, V], Tree[K, V])]) {
 
