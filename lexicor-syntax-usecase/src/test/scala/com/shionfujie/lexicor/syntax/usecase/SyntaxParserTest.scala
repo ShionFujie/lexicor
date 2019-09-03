@@ -18,6 +18,7 @@ class SyntaxParserTest extends FunSuite with Matchers {
     val `tag` = "tag"
     val `tag fly #[Target]` = "tag fly #[Target]"
     val `tag is` = "tag is"
+    val `tag is is #[Target]` = "tag is is #[Target]"
   }
 
   /** Test cases each entry of which consists of a string sentence written in the language on the left hand side and its
@@ -28,6 +29,7 @@ class SyntaxParserTest extends FunSuite with Matchers {
     `tag` -> List(Subject((0, 2), Symbols.Tag)),
     `tag fly #[Target]` -> List(Subject((0, 2), Symbols.Tag), Unknown((4, 7)), TagLiteral((9, 22), List("Target"))),
     `tag is` -> List(Subject((0, 2), Symbols.Tag), Keyword((4, 5), Symbols.Is)),
+    `tag is is #[Target]` -> List(Subject((0, 2), Symbols.Tag), Keyword((4, 5), Symbols.Is), Keyword((7, 8), Symbols.Is), TagLiteral((10, 23), List("Target"))),
   )
 
   test("parse") {
@@ -54,6 +56,10 @@ class SyntaxParserTest extends FunSuite with Matchers {
 
   test("missing target") {
     lexemesOf(`tag is`) shouldFailBecauseOf new Error(at = (6, 7), message = "tag literal expected")
+  }
+
+  test("illegal target") {
+    lexemesOf(`tag is is #[Target]`) shouldFailBecauseOf new Error(at = (7, 8), message = "tag literal expected, but found keyword")
   }
 
   private class LexemesShouldFailBecauseOfReason(syntaxParser: SyntaxParser, lexemes: List[Lexeme]) {
