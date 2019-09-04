@@ -3,6 +3,9 @@ organization := buildConfig.organization
 version := buildConfig.version
 scalaVersion := buildConfig.scalaVersion
 
+lazy val coreImplementation = (project in file("lexicor-core-implementation"))
+  .dependsOn(coreDomain)
+
 lazy val lexicalUsecase = (project in file("lexicor-lexical-usecase"))
   .dependsOn(coreDomain)
 
