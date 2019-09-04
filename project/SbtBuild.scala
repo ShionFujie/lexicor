@@ -10,4 +10,8 @@ object deps {
   val parserCombinator = "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
   val scalactic = "org.scalactic" %% "scalactic" % "3.0.8"
   val scalatest = "org.scalatest" %% "scalatest" % "3.0.8" % "test"
+  val scalaPBDependencies = Seq(
+    "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion,
+    "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion
+  )
 }
