@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_package = "com.shionfujie.lexicor.lexical.grpc";
+
+package lexical;
+
+import "core.proto";
+
+service LexicalParseService {
+    rpc parse (LexicalParseRequest) returns (LexicalParseReply);
+}
+
+message LexicalParseRequest {
+    string input = 1;
+}
+
+message LexicalParseReply {
+    repeated core.Lexeme lexemes = 1;
+}
