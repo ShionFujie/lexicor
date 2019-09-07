@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+option java_package = "com.shionfujie.lexicor.syntax.grpc";
+
+package syntax;
+
+import "core.proto";
+
+service SyntaxParseService {
+    rpc Parse (SyntaxParseRequest) returns (SyntaxParseReply);
+}
+
+message SyntaxParseRequest {
+    repeated core.Lexeme lexemes = 1;
+}
+
+message SyntaxParseReply {
+    repeated Result results = 1;
+}
+
+message Result {
+    oneof result {
+        Cond cond = 1;
+        Error error = 2;
+    }
+}
+
+message Cond {
+    SyntaxType syntax_type = 1;
+    string value = 2;
+}
+
+message Error {
+    core.Pos at = 1;
+    string message = 2;
+}
+
+enum SyntaxType {
+    TAG_IS = 0;
+    TAG_IS_IN =1;
+}
+
