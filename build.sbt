@@ -13,6 +13,13 @@ lazy val lexicalImplementation = (project in file("lexicor-lexical-implementatio
     coreImplementation
   )
 
+lazy val syntaxImplementation = (project in file("lexicor-syntax-implementation"))
+  .settings(includeProtos(coreImplementation))
+  .dependsOn(
+    syntaxUsecase,
+    coreImplementation
+  )
+
 lazy val lexicalUsecase = (project in file("lexicor-lexical-usecase"))
   .dependsOn(coreDomain)
 
