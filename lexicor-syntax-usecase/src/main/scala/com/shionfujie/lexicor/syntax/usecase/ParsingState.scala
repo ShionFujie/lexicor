@@ -10,11 +10,15 @@ sealed private[syntax] trait ParsingState
 
 private[syntax] object ParsingState {
 
-  object Starting extends ParsingState
   case class FoundSubject(subject: Lexeme) extends ParsingState
+
   case class FoundKeyword(subject: Lexeme, keywords: List[Lexeme]) extends ParsingState
+
   case class FoundPredicate(keywords: List[Lexeme], expecting: String) extends ParsingState
+
   case class Terminated(cond: Cond) extends ParsingState
+
+  object Starting extends ParsingState
 
 }
 

@@ -2,7 +2,7 @@ package com.shionfujie.lexicor.syntax.usecase
 
 import com.shionfujie.lexicor.syntax.domain.SyntaxType
 
-private[syntax] sealed trait SyntaxNode {
+sealed private[syntax] trait SyntaxNode {
 
   val expectation: Expectation
 

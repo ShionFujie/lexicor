@@ -53,9 +53,10 @@ package object usecase {
 
   }
 
-  private[syntax] implicit def convertToSyntaxTreeExt(tree: SyntaxTree): SyntaxTreeExt =
+  implicit private[syntax] def convertToSyntaxTreeExt(tree: SyntaxTree): SyntaxTreeExt =
     new SyntaxTreeExt(tree)
 
-  private[syntax] implicit def convertToParsingStateExt(parsingState: ParsingState): ParsingStateExt = new ParsingStateExt(parsingState)
+  implicit private[syntax] def convertToParsingStateExt(
+      parsingState: ParsingState): ParsingStateExt = new ParsingStateExt(parsingState)
 
 }

@@ -6,7 +6,7 @@ import com.shionfujie.lexicor.core.domain.Lexemes.TagLiteral
 
 import scala.reflect.ClassTag
 
-private[usecase] sealed trait Expectation {
+sealed private[usecase] trait Expectation {
 
   def apply(lexeme: Lexeme): Boolean
 
@@ -28,22 +28,22 @@ private[usecase] object Expectations {
 
   val TagLiteral: TargetExpectation = Literal[TagLiteral](Representations.TagLiteral)
 
-  private case class KeywordExpectation(keyword: Symbol) extends Expectation {
-
-    override def apply(l: Lexeme): Boolean = l match {
-      case k: domain.Keyword => k.keyword == this.keyword
-      case _ => false
-    }
-
-  }
-
   private def Literal[L: ClassTag](e: String): TargetExpectation = new TargetExpectation {
 
     override val expecting: String = e
 
     override def apply(v1: Lexeme): Boolean = v1 match {
       case _: L => true
-      case _ => false
+      case _    => false
+    }
+
+  }
+
+  private case class KeywordExpectation(keyword: Symbol) extends Expectation {
+
+    override def apply(l: Lexeme): Boolean = l match {
+      case k: domain.Keyword => k.keyword == this.keyword
+      case _                 => false
     }
 
   }

@@ -9,16 +9,16 @@ private[usecase] object SyntaxConstruction extends Enumeration {
   val TagIsIn = Val(SyntaxType.TagIsIn, Tag, Vector(Is, In), TagLiteral)
 
   def unapply(v: SyntaxConstruction.Val)
-  : Option[(SyntaxType, Expectation, Vector[Expectation], TargetExpectation)] = {
+    : Option[(SyntaxType, Expectation, Vector[Expectation], TargetExpectation)] = {
     val Val(syntaxType, subject, keywords, target) = v
     Some((syntaxType, subject, keywords, target))
   }
 
   case class Val(
-                  syntaxType: SyntaxType,
-                  subject: Expectation,
-                  keywords: Vector[Expectation],
-                  target: TargetExpectation
-                ) extends super.Val
+      syntaxType: SyntaxType,
+      subject: Expectation,
+      keywords: Vector[Expectation],
+      target: TargetExpectation
+  ) extends super.Val
 
 }
