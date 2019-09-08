@@ -15,7 +15,9 @@ class LexicalParserTest extends FunSpec with LexicalTestMixin {
 
     it("should parse 'tag is #[First/Second third]'") {
       lexicalParser("tag is #[First/Second third]") shouldBe
-        List(Subject((0, 2), Symbols.Tag), Keyword((4, 5), Symbols.Is), TagLiteral((7, 27), List("First", "Second third")))
+        List(Subject((0, 2), Symbols.Tag),
+             Keyword((4, 5), Symbols.Is),
+             TagLiteral((7, 27), List("First", "Second third")))
     }
 
     it("should require that tokens be separated") {
@@ -31,18 +33,14 @@ class LexicalParserTest extends FunSpec with LexicalTestMixin {
       import lexicalParser._
 
       val testCases =
-        Table("keywords and their parsers",
-          (Symbols.Tag, tag),
-          (Symbols.Is, is),
-          (Symbols.In, in)
-        )
+        Table("keywords and their parsers", (Symbols.Tag, tag), (Symbols.Is, is), (Symbols.In, in))
 
       it("should parse their names respectively") {
         forAll(testCases) { testCase =>
           val (keyword, parser) = testCase
           val lexeme = parser(keyword.name)
 
-          lexeme shouldBe a [domain.Keyword]
+          lexeme shouldBe a[domain.Keyword]
 
           val keywordLexeme = lexeme.asInstanceOf[domain.Keyword]
 
@@ -71,7 +69,9 @@ class LexicalParserTest extends FunSpec with LexicalTestMixin {
       import lexicalParsers.rep
 
       it("should parse any input but white spaces") {
-        rep(unknown)("First Second Third") shouldBe List(Unknown((0, 4)), Unknown((6, 11)), Unknown((13, 17)))
+        rep(unknown)("First Second Third") shouldBe List(Unknown((0, 4)),
+                                                         Unknown((6, 11)),
+                                                         Unknown((13, 17)))
       }
 
     }

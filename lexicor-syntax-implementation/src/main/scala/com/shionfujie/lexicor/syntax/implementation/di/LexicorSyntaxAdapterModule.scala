@@ -8,8 +8,8 @@ import com.shionfujie.lexicor.syntax.grpc._
 import com.shionfujie.lexicor.syntax.implementation.adapter._
 
 final class LexicorSyntaxAdapterModule(
-                                        coreAdapterModule: LexicorCoreAdapterModule
-                                      ) {
+    coreAdapterModule: LexicorCoreAdapterModule
+) {
   import coreAdapterModule._
 
   lazy val requestDeserializer: Deserializer[SyntaxParseRequest, List[DomainLexeme]] =

@@ -9,15 +9,17 @@ trait LexicalTestMixin extends Matchers {
 
   import lexicalParsers._
 
-  protected implicit def convertToParserExt[T](parser: Parser[T]): ParserExt[T] = new ParserExt(parser)
+  implicit protected def convertToParserExt[T](parser: Parser[T]): ParserExt[T] =
+    new ParserExt(parser)
 
-  protected implicit def convertToParserShouldFailToParseInput[T](parser: Parser[T]): ParserShouldFailToParseInput[T] = new ParserShouldFailToParseInput(parser)
+  implicit protected def convertToParserShouldFailToParseInput[T](
+      parser: Parser[T]): ParserShouldFailToParseInput[T] = new ParserShouldFailToParseInput(parser)
 
   protected class ParserExt[T](parser: Parser[T]) {
 
     def apply(input: String): T = phrase(parser)(new CharSequenceReader(input)) match {
       case Success(lexemes, _) => lexemes
-      case _ => throw new IllegalInputException
+      case _                   => throw new IllegalInputException
     }
 
   }
@@ -25,7 +27,7 @@ trait LexicalTestMixin extends Matchers {
   protected class ParserShouldFailToParseInput[T](parser: Parser[T]) {
 
     def shouldFailToParse(input: String): Assertion =
-      an [IllegalInputException] should be thrownBy parser(input)
+      an[IllegalInputException] should be thrownBy parser(input)
 
   }
 

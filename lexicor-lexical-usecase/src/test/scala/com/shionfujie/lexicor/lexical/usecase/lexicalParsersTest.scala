@@ -11,8 +11,8 @@ class lexicalParsersTest extends FunSuite with LexicalTestMixin {
     val parser = "Id" ~ parens('(', unzip("#[0-9]+".r), ')')
     val first ~ second = parser("Id(#0123)")
 
-    first shouldBe((0, 1), "Id")
-    second shouldBe((2, 8), "#0123")
+    first shouldBe ((0, 1), "Id")
+    second shouldBe ((2, 8), "#0123")
   }
 
 }

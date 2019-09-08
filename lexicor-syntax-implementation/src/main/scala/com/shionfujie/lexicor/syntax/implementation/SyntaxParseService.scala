@@ -9,10 +9,10 @@ import com.shionfujie.lexicor.syntax.usecase.SyntaxParser
 import scala.concurrent.Future
 
 class SyntaxParseService(
-                          syntaxParser: SyntaxParser,
-                          requestDeserializer: Deserializer[SyntaxParseRequest, List[DomainLexeme]],
-                          responseSerializer: Serializer[List[DomainResult], SyntaxParseReply]
-                        ) extends SyntaxParseServiceGrpc.SyntaxParseService {
+    syntaxParser: SyntaxParser,
+    requestDeserializer: Deserializer[SyntaxParseRequest, List[DomainLexeme]],
+    responseSerializer: Serializer[List[DomainResult], SyntaxParseReply]
+) extends SyntaxParseServiceGrpc.SyntaxParseService {
 
   override def parse(request: SyntaxParseRequest): Future[SyntaxParseReply] = {
     val lexemes = requestDeserializer.deserialize(request)

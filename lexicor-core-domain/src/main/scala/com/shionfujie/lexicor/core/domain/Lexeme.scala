@@ -28,29 +28,11 @@ object Lexemes {
 
   def Subject(pos: Pos, keyword: Symbol): Subject = SubjectImpl(pos, keyword)
 
-  object Keyword {
-
-    def unapply(lexeme: Lexeme): Option[(Pos, Symbol)] = lexeme match {
-      case KeywordImpl(pos, keyword) => Some((pos, keyword))
-      case _                         => None
-    }
-
-  }
-
-  object Subject {
-
-    def unapply(lexeme: Lexeme): Option[(Pos, Symbol)] = lexeme match {
-      case SubjectImpl(pos, keyword) => Some((pos, keyword))
-      case _                         => None
-    }
-
-  }
-
   case class TagLiteral(pos: Pos, path: List[String]) extends Target {
 
-    override def repr: String = Representations.TagLiteral
-
     override val value: String = path.mkString("/")
+
+    override def repr: String = Representations.TagLiteral
 
   }
 
@@ -69,6 +51,24 @@ object Lexemes {
   private case class SubjectImpl(pos: Pos, keyword: Symbol) extends Keyword with Subject {
 
     override def repr: String = Representations.Keyword
+
+  }
+
+  object Keyword {
+
+    def unapply(lexeme: Lexeme): Option[(Pos, Symbol)] = lexeme match {
+      case KeywordImpl(pos, keyword) => Some((pos, keyword))
+      case _                         => None
+    }
+
+  }
+
+  object Subject {
+
+    def unapply(lexeme: Lexeme): Option[(Pos, Symbol)] = lexeme match {
+      case SubjectImpl(pos, keyword) => Some((pos, keyword))
+      case _                         => None
+    }
 
   }
 

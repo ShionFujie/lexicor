@@ -7,7 +7,7 @@ import com.shionfujie.lexicor.syntax.domain.{Error => DomainError}
 import com.shionfujie.lexicor.syntax.grpc.{Error => GrpcError}
 
 class ErrorSerializer(posSerializer: Serializer[DomainPos, GrpcPos])
-  extends Serializer[DomainError, GrpcError] {
+    extends Serializer[DomainError, GrpcError] {
 
   override def serialize(error: DomainError): GrpcError =
     GrpcError(at = Some(posSerializer.serialize(error.at)), message = error.message)

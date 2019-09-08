@@ -17,10 +17,12 @@ final class SyntaxParser {
     * begins with a non-Subject.
     */
   private def splitAtSubject(lexemes: List[Lexeme]): List[List[Lexeme]] =
-    lexemes.foldLeft(Nil: List[List[Lexeme]]) {
-      case (Nil, lexeme)          => List(List(lexeme))
-      case (acc, lexeme: Subject) => List(lexeme) :: acc
-      case (a :: as, lexeme)      => (lexeme :: a) :: as
-    }.map(_.reverse)
+    lexemes
+      .foldLeft(Nil: List[List[Lexeme]]) {
+        case (Nil, lexeme)          => List(List(lexeme))
+        case (acc, lexeme: Subject) => List(lexeme) :: acc
+        case (a :: as, lexeme)      => (lexeme :: a) :: as
+      }
+      .map(_.reverse)
 
 }

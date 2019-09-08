@@ -74,21 +74,23 @@ private object lexicalParsers extends Parsers {
 
   /** A parser that matches what `p` matches which is parenthesised, i.e., following `opening` and
     * preceding `closing`, and returns the result of `p` with a [[Pos]]. */
-  def parens[T](opening: Elem, p: => Parser[T], closing: Elem): Parser[T With Pos] = opening ~ p ~ closing ^^ { case (start, _) ~ t ~ ((end, _)) => (start bridgeTo end, t) }
+  def parens[T](opening: Elem, p: => Parser[T], closing: Elem): Parser[T With Pos] =
+    opening ~ p ~ closing ^^ { case (start, _) ~ t ~ ((end, _)) => (start bridgeTo end, t) }
 
   private[lexical] def unzip[T](p: => Parser[T With Pos]): Parser[T] = for ((_, t) <- p) yield t
 
   /** Behaves as the same as [[Parsers.acceptIf]] except an [[Elem]] with a [[Pos]] being returned instead. */
-  private def acceptIf2(p: Elem => Boolean)(err: Elem => String): Parser[Elem With Pos] = in =>
-    if (in.atEnd) Failure("end of input", in)
-    else if (p(in.first)) Success(((in.offset, in.offset), in.first), in.rest)
-    else Failure(err(in.first), in)
+  private def acceptIf2(p: Elem => Boolean)(err: Elem => String): Parser[Elem With Pos] =
+    in =>
+      if (in.atEnd) Failure("end of input", in)
+      else if (p(in.first)) Success(((in.offset, in.offset), in.first), in.rest)
+      else Failure(err(in.first), in)
 
   /** Behaves as the same as [[scala.util.parsing.combinator.RegexParsers.handleWhiteSpace]] except that it always skips white spaces */
-  private def handleWhiteSpace(source: java.lang.CharSequence, offset: Int): Int =
+  private def handleWhiteSpace(source: CharSequence, offset: Int): Int =
     whiteSpace.findPrefixMatchOf(new SubSequence(source, offset)) match {
       case Some(matched) => offset + matched.end
-      case None => offset
+      case None          => offset
     }
 
 }

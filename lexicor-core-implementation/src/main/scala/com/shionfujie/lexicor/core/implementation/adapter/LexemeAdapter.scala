@@ -17,9 +17,9 @@ import com.shionfujie.lexicor.core.grpc.Lexeme.{
 }
 
 class LexemeAdapter(
-                     posAdapter: Serializer[DomainPos, GrpcPos] with Deserializer[GrpcPos, DomainPos]
-                   ) extends Serializer[DomainLexeme, GrpcLexeme]
-  with Deserializer[GrpcLexeme, DomainLexeme] {
+    posAdapter: Serializer[DomainPos, GrpcPos] with Deserializer[GrpcPos, DomainPos]
+) extends Serializer[DomainLexeme, GrpcLexeme]
+    with Deserializer[GrpcLexeme, DomainLexeme] {
 
   override def serialize(lexeme: DomainLexeme): GrpcLexeme = lexeme match {
     case DomainSubject(pos, keyword) =>
@@ -31,6 +31,8 @@ class LexemeAdapter(
     case DomainUnknown(pos) =>
       GrpcLexeme().withUnknown(GrpcUnknown(pos = serializePos(pos)))
   }
+
+  private def serializePos(pos: DomainPos) = Some(posAdapter.serialize(pos))
 
   override def deserialize(lexeme: GrpcLexeme): DomainLexeme = lexeme.value match {
     case GrpcValue.Subject(subject) =>
@@ -44,8 +46,6 @@ class LexemeAdapter(
     case GrpcValue.Empty =>
       throw new IllegalArgumentException(s"${GrpcValue.Empty} is not serializable")
   }
-
-  private def serializePos(pos: DomainPos) = Some(posAdapter.serialize(pos))
 
   private def deserializePos(pos: GrpcPos) = posAdapter.deserialize(pos)
 
