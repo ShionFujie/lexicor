@@ -23,4 +23,3 @@ package object domain {
   implicit def convertToPosExt(pos: Pos): PosExt = new PosExt(pos)
 
 }
-
