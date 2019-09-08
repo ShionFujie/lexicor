@@ -6,6 +6,7 @@ package com.shionfujie.lexicor.lexical.usecase
   * RegexParsers calls subSequence twice per input character: that's a lot of array copying!
   */
 private class SubSequence(s: CharSequence, start: Int, val length: Int) extends CharSequence {
+
   def this(s: CharSequence, start: Int) = this(s, start, s.length - start)
 
   def charAt(i: Int) =
@@ -20,4 +21,5 @@ private class SubSequence(s: CharSequence, start: Int, val length: Int) extends 
   }
 
   override def toString = s.subSequence(start, start + length).toString
+
 }
