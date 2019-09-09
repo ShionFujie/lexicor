@@ -24,24 +24,26 @@ private[syntax] object ParsingState {
 
 private[syntax] class ParsingStateExt(state: ParsingState) {
 
-  def nextState(syntaxNode: SyntaxNode, lexeme: Lexeme): ParsingState = (state, syntaxNode) match {
-    case (Starting, _: Subject) =>
-      FoundSubject(lexeme.asInstanceOf[core.domain.Subject])
-    case (FoundSubject(subject), _: NonDeterminingPredicate) =>
-      FoundKeyword(subject, List(lexeme))
-    case (FoundKeyword(subject, keywords), _: NonDeterminingPredicate) =>
-      FoundKeyword(subject, lexeme +: keywords)
-    case (_: FoundSubject, d: DeterminingPredicate) =>
-      FoundPredicate(List(lexeme), d.expecting)
-    case (FoundKeyword(_, keywords), d: DeterminingPredicate) =>
-      FoundPredicate(lexeme +: keywords, d.expecting)
-    case (FoundPredicate(keywords, _), d: DeterminingPredicate) =>
-      FoundPredicate(lexeme +: keywords, d.expecting)
-    case (_: FoundPredicate, t: Terminating) =>
-      Terminated(Cond(t.`type`, lexeme.asInstanceOf[Target].value))
-    case _ =>
-      throw new IllegalStateException(
-        s"Make sure the branches be exhaustive: (state, syntaxNode) = ${(state, syntaxNode)}, lexeme = $lexeme")
-  }
+  def nextState(syntaxNode: SyntaxNode, lexeme: Lexeme): ParsingState =
+    (state, syntaxNode) match {
+      case (Starting, _: Subject) =>
+        FoundSubject(lexeme.asInstanceOf[core.domain.Subject])
+      case (FoundSubject(subject), _: NonDeterminingPredicate) =>
+        FoundKeyword(subject, List(lexeme))
+      case (FoundKeyword(subject, keywords), _: NonDeterminingPredicate) =>
+        FoundKeyword(subject, lexeme +: keywords)
+      case (_: FoundSubject, d: DeterminingPredicate) =>
+        FoundPredicate(List(lexeme), d.expecting)
+      case (FoundKeyword(_, keywords), d: DeterminingPredicate) =>
+        FoundPredicate(lexeme +: keywords, d.expecting)
+      case (FoundPredicate(keywords, _), d: DeterminingPredicate) =>
+        FoundPredicate(lexeme +: keywords, d.expecting)
+      case (_: FoundPredicate, t: Terminating) =>
+        Terminated(Cond(t.`type`, lexeme.asInstanceOf[Target].value))
+      case _ =>
+        throw new IllegalStateException(
+          s"Make sure the branches be exhaustive: (state, syntaxNode) = " +
+            s"${(state, syntaxNode)}, lexeme = $lexeme")
+    }
 
 }
