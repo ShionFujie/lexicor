@@ -3,14 +3,14 @@ package com.shionfujie.lexicor.syntax.implementation.di
 import com.shionfujie.lexicor.syntax.implementation.SyntaxParseService
 
 final class LexicorSyntaxImplementationModule(
-    usecaseModule: LexicorSyntaxUsecaseModule,
-    adapterModule: LexicorSyntaxAdapterModule
+    syntaxUsecaseModule: LexicorSyntaxUsecaseModule,
+    syntaxAdapterModule: LexicorSyntaxAdapterModule
 ) {
 
-  import adapterModule._
-  import usecaseModule._
+  import syntaxAdapterModule._
+  import syntaxUsecaseModule._
 
-  lazy val parseService: SyntaxParseService =
+  lazy val syntaxParseService: SyntaxParseService =
     new SyntaxParseService(syntaxParser, requestDeserializer, responseSerializer)
 
 }
