@@ -24,20 +24,12 @@ private[syntax] object Tree {
 
   def apply[K, D](pair: (K, D), pairs: (K, D)*): Tree[K, D] = factory(pair, pairs: _*)
 
-  private def merge[K, V](
-      thisSubtrees: Subtrees[K, V],
-      thatSubtrees: Subtrees[K, V],
-      f: (V, V) => V): Subtrees[K, V] = {
-
+  private def merge[K, V](thisSubtrees: Subtrees[K, V], thatSubtrees: Subtrees[K, V], f: (V, V) => V): Subtrees[K, V] = {
     /** Assuming that the keys of `subtree` and `subtree1` coincide, merge them into a new subtree recursively */
-    def newSubtree(
-        subtree: Subtree[K, V],
-        subtree1: Subtree[K, V],
-        f: (V, V) => V): Subtree[K, V] = {
+    def newSubtree(subtree: Subtree[K, V], subtree1: Subtree[K, V], f: (V, V) => V): Subtree[K, V] = {
       val (Entry(key, value), tree) = subtree
       val (Entry(_, value1), tree1) = subtree1
       val newTree = Tree(subtrees = merge(tree.subtrees, tree1.subtrees, f))
-
       (Entry(key, f(value, value1)), newTree)
     }
 
