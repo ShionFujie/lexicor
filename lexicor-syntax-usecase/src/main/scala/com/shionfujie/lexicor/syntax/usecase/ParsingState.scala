@@ -30,10 +30,10 @@ private[syntax] class ParsingStateExt(state: ParsingState) {
         FoundSubject(lexeme.asInstanceOf[core.domain.Subject])
       case (FoundSubject(subject), _: NonDeterminingPredicate) =>
         FoundKeyword(subject, List(lexeme))
-      case (FoundKeyword(subject, keywords), _: NonDeterminingPredicate) =>
-        FoundKeyword(subject, lexeme +: keywords)
       case (_: FoundSubject, d: DeterminingPredicate) =>
         FoundPredicate(List(lexeme), d.expecting)
+      case (FoundKeyword(subject, keywords), _: NonDeterminingPredicate) =>
+        FoundKeyword(subject, lexeme +: keywords)
       case (FoundKeyword(_, keywords), d: DeterminingPredicate) =>
         FoundPredicate(lexeme +: keywords, d.expecting)
       case (FoundPredicate(keywords, _), d: DeterminingPredicate) =>
