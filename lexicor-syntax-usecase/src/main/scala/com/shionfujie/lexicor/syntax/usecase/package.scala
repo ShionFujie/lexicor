@@ -5,6 +5,8 @@ import com.shionfujie.lexicor.syntax.usecase.ParsingState.Starting
 import com.shionfujie.lexicor.syntax.usecase.SyntaxNode._
 import com.shionfujie.lexicor.syntax.usecase.util.Tree
 
+import scala.collection.immutable.VectorBuilder
+
 package object usecase {
 
   private[syntax] type SyntaxConstruction = SyntaxConstruction.Value
@@ -17,16 +19,23 @@ package object usecase {
     def parse(input: List[Lexeme]): Result = parse(Starting, input)
 
     private def parse(state0: ParsingState, input0: List[Lexeme]): Result = {
-      val (finalState, remaining) = tree.foldWhile((state0, input0))(
-        p = (acc, expectation) => {
-          val (_, input1) = acc
-          input1.nonEmpty && expectation(input1.head)
-        },
-        op = (acc, syntaxNode) => {
-          val (currentState, lexeme :: remaining1) = acc
-          (currentState.nextState(syntaxNode, lexeme), remaining1)
-        }
-      )
+      /* Traverse the AST down to a leaf while the predicate holds true.
+       * On each of the nodes in the AST, the folding proceeds reducing the
+       * current state to the next state.
+       * The result will be the pair of the final state and the remaining of the
+       * input which was not consumed.
+       */
+      val (finalState, remaining) =
+        tree.foldWhile((state0, input0))(
+          p = (acc, expectation) => {
+            val (_, input1) = acc
+            input1.nonEmpty && expectation(input1.head)
+          },
+          op = (acc, syntaxNode) => {
+            val (currentState, lexeme :: remaining1) = acc
+            (currentState.nextState(syntaxNode, lexeme), remaining1)
+          }
+        )
 
       Result(finalState, remaining)
     }
@@ -47,8 +56,11 @@ package object usecase {
 
     private def toNodes(syntaxConstruction: SyntaxConstruction): Vector[SyntaxNode] = {
       val SyntaxConstruction(t, subject, keywords, target) = syntaxConstruction
-      Subject(subject) +: (keywords.init.map(NonDeterminingPredicate) ++
-        Vector(DeterminingPredicate(keywords.last, target.expecting), Terminating(target, t)))
+      val b = new VectorBuilder[SyntaxNode]
+      b += Subject(subject)
+      b ++= keywords.init.map(NonDeterminingPredicate)
+      b += (DeterminingPredicate(keywords.last, target.expecting), Terminating(target, t))
+      b.result()
     }
 
   }

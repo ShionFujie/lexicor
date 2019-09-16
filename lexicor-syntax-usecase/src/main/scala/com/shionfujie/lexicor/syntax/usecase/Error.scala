@@ -13,19 +13,13 @@ private[syntax] object Error {
     case _                                   => throw new IllegalStateException(s"(state, input) = ${(state, input)}")
   }
 
-  private def illegalPredicate(
-      lexeme: Lexeme,
-      input: List[Lexeme],
-      keywords: List[Lexeme]): Error = {
+  private def illegalPredicate(lexeme: Lexeme, input: List[Lexeme], keywords: List[Lexeme]): Error = {
     val l = keywords ::: input
     if (l.isEmpty) new Error(lexeme.pos.overflow, "predicate expected")
     else new Error(l.head.pos bridgeTo l.last.pos, "illegal predicate")
   }
 
-  private def targetExpected(
-      keywords: List[Lexeme],
-      expecting: String,
-      input: List[Lexeme]): Error =
+  private def targetExpected(keywords: List[Lexeme], expecting: String, input: List[Lexeme]): Error =
     if (input.isEmpty) {
       val last = keywords.last.pos
       new Error(last.overflow, s"$expecting expected")
