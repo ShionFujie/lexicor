@@ -1,9 +1,20 @@
 package com.shionfujie.lexicor.core.implementation.adapter
 
 import com.shionfujie.lexicor.core.domain.{Lexeme => DomainLexeme, Pos => DomainPos}
-import com.shionfujie.lexicor.core.domain.Lexemes.{Keyword => DomainKeyword, Subject => DomainSubject, TagLiteral => DomainTagLiteral, Unknown => DomainUnknown}
+import com.shionfujie.lexicor.core.domain.Lexemes.{
+  Keyword => DomainKeyword,
+  Subject => DomainSubject,
+  TagLiteral => DomainTagLiteral,
+  Unknown => DomainUnknown
+}
 import com.shionfujie.lexicor.core.grpc.{Lexeme => GrpcLexeme, Pos => GrpcPos}
-import com.shionfujie.lexicor.core.grpc.Lexeme.{Keyword => GrpcKeyword, Subject => GrpcSubject, TagLiteral => GrpcTagLiteral, Unknown => GrpcUnknown, Value => GrpcValue}
+import com.shionfujie.lexicor.core.grpc.Lexeme.{
+  Keyword => GrpcKeyword,
+  Subject => GrpcSubject,
+  TagLiteral => GrpcTagLiteral,
+  Unknown => GrpcUnknown,
+  Value => GrpcValue
+}
 
 class LexemeAdapter(
     posAdapter: Serializer[DomainPos, GrpcPos] with Deserializer[GrpcPos, DomainPos]
@@ -33,7 +44,7 @@ class LexemeAdapter(
     case GrpcValue.Unknown(GrpcLexeme.Unknown(Some(pos))) =>
       DomainUnknown(deserializePos(pos))
     case GrpcValue.Empty =>
-      throw new IllegalArgumentException(s"${GrpcValue.Empty} is not serializable")
+      throw new IllegalStateException(s"${GrpcValue.Empty} is not serializable")
   }
 
   private def deserializePos(pos: GrpcPos) = posAdapter.deserialize(pos)
