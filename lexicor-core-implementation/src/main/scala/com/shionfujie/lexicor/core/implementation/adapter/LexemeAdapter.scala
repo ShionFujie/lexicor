@@ -33,7 +33,7 @@ class LexemeAdapter(
     case GrpcValue.Unknown(GrpcLexeme.Unknown(Some(pos))) =>
       DomainUnknown(deserializePos(pos))
     case GrpcValue.Empty =>
-      throw new IllegalArgumentException(s"${GrpcValue.Empty} is not serializable")
+      throw new IllegalStateException(s"${GrpcValue.Empty} is not serializable")
   }
 
   private def deserializePos(pos: GrpcPos) = posAdapter.deserialize(pos)
