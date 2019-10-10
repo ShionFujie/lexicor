@@ -1,20 +1,9 @@
 package com.shionfujie.lexicor.core.implementation.adapter
 
 import com.shionfujie.lexicor.core.domain.{Lexeme => DomainLexeme, Pos => DomainPos}
-import com.shionfujie.lexicor.core.domain.Lexemes.{
-  Keyword => DomainKeyword,
-  Subject => DomainSubject,
-  TagLiteral => DomainTagLiteral,
-  Unknown => DomainUnknown
-}
+import com.shionfujie.lexicor.core.domain.Lexemes.{Keyword => DomainKeyword, Subject => DomainSubject, TagLiteral => DomainTagLiteral, Unknown => DomainUnknown}
 import com.shionfujie.lexicor.core.grpc.{Lexeme => GrpcLexeme, Pos => GrpcPos}
-import com.shionfujie.lexicor.core.grpc.Lexeme.{
-  Keyword => GrpcKeyword,
-  Subject => GrpcSubject,
-  TagLiteral => GrpcTagLiteral,
-  Unknown => GrpcUnknown,
-  Value => GrpcValue
-}
+import com.shionfujie.lexicor.core.grpc.Lexeme.{Keyword => GrpcKeyword, Subject => GrpcSubject, TagLiteral => GrpcTagLiteral, Unknown => GrpcUnknown, Value => GrpcValue}
 
 class LexemeAdapter(
     posAdapter: Serializer[DomainPos, GrpcPos] with Deserializer[GrpcPos, DomainPos]
@@ -35,14 +24,14 @@ class LexemeAdapter(
   private def serializePos(pos: DomainPos) = Some(posAdapter.serialize(pos))
 
   override def deserialize(lexeme: GrpcLexeme): DomainLexeme = lexeme.value match {
-    case GrpcValue.Subject(subject) =>
-      DomainSubject(deserializePos(subject.getPos), Symbol(subject.keyword))
-    case GrpcValue.Keyword(keyword) =>
-      DomainKeyword(deserializePos(keyword.getPos), Symbol(keyword.keyword))
-    case GrpcValue.TagLiteral(tagLiteral) =>
-      DomainTagLiteral(deserializePos(tagLiteral.getPos), tagLiteral.path.toList)
-    case GrpcValue.Unknown(unknown) =>
-      DomainUnknown(deserializePos(unknown.getPos))
+    case GrpcValue.Subject(GrpcLexeme.Subject(Some(pos), keyword)) =>
+      DomainSubject(deserializePos(pos), Symbol(keyword))
+    case GrpcValue.Keyword(GrpcLexeme.Keyword(Some(pos), keyword)) =>
+      DomainKeyword(deserializePos(pos), Symbol(keyword))
+    case GrpcValue.TagLiteral(GrpcLexeme.TagLiteral(Some(pos), path)) =>
+      DomainTagLiteral(deserializePos(pos), path.toList)
+    case GrpcValue.Unknown(GrpcLexeme.Unknown(Some(pos))) =>
+      DomainUnknown(deserializePos(pos))
     case GrpcValue.Empty =>
       throw new IllegalArgumentException(s"${GrpcValue.Empty} is not serializable")
   }
