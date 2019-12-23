@@ -4,6 +4,7 @@ import com.shionfujie.lexicor.syntax.domain.Result
 import com.shionfujie.lexicor.syntax.usecase.ParsingState.Starting
 import com.shionfujie.lexicor.syntax.usecase.SyntaxNode._
 import com.shionfujie.lexicor.syntax.usecase.util.Tree
+import com.shionfujie.lexicor.syntax.usecase.util.Tree.FoldWhileStrategy.PICK_LEFT
 
 import scala.collection.immutable.VectorBuilder
 
@@ -47,7 +48,7 @@ package object usecase {
     def apply(): SyntaxTree =
       SyntaxConstruction.values
         .map(toSyntaxTree)
-        .reduce(_.merge(_, (a, _) => a))
+        .reduce(_.merge(_, PICK_LEFT))
 
     private def toSyntaxTree(syntax: SyntaxConstruction): SyntaxTree = {
       val s +: ss = for (n <- toNodes(syntax)) yield (n.expectation, n)
@@ -57,9 +58,11 @@ package object usecase {
     private def toNodes(syntaxConstruction: SyntaxConstruction): Vector[SyntaxNode] = {
       val SyntaxConstruction(t, subject, keywords, target) = syntaxConstruction
       val b = new VectorBuilder[SyntaxNode]
+
       b += Subject(subject)
       b ++= keywords.init.map(NonDeterminingPredicate)
       b += (DeterminingPredicate(keywords.last, target.expecting), Terminating(target, t))
+
       b.result()
     }
 

@@ -41,6 +41,10 @@ private[syntax] object Tree {
     })
   }
 
+  object FoldWhileStrategy {
+    def PICK_LEFT[T]: (T, T) => T = (a, _) => a
+  }
+
   private object factory {
 
     private val emptyInstance: Tree[Any, Any] = new Tree(Set.empty)
